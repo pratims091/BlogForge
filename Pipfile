@@ -1,0 +1,36 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+googlesearch-python = "*"
+beautifulsoup4 = "*"
+pytrends = "*"
+python-dotenv = "*"
+requests = "*"
+urllib3 = "<2"
+langchain = "*"
+langchain-community = "*"
+langchainhub = "*"
+langchain-google-genai = "*"
+langchain-chroma = "*"
+supabase = "*"
+langsmith = "*"
+transformers = "*"
+langchain-groq = "*"
+streamlit = "*"
+streamlit-chat = "*"
+
+[dev-packages]
+ruff = "*"
+pre-commit = "*"
+
+[scripts]
+start = "python -m streamlit run app.py"
+lint = "ruff check ."
+format = "ruff format ."
+check = "ruff check --fix ."
+
+[requires]
+python_version = "3.12"
