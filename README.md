@@ -34,7 +34,12 @@ I wanted to write SEO-friendly blog posts for my portfolio website [pratim.me](h
 
 4. **AI-Generated Blog Writing**
 
-   - Uses **LLaMA-3.3-70B-Versatile via Groq** ([Groq](https://groq.com/)) to generate a structured, SEO-optimized blog post.
+   - Supports multiple LLM providers:
+     - **Gemini** via Google AI
+     - **LLaMA models** via Groq
+     - **DeepSeek models** via DeepSeek AI
+     - **Local models** via Ollama
+   - Generates structured, SEO-optimized blog posts using your preferred LLM
 
 5. **Interactive Refinement**
 
@@ -72,12 +77,14 @@ pipenv install
    cp example.env .env
    ```
 
-2. Populate `.env` with required API keys:
-   - `GOOGLE_API_KEY`
-   - `GROQ_API_KEY`
-   - `JINA_API_KEY`
-   - `SUPABASE_URL`
-   - `SUPABASE_KEY`
+2. Populate `.env` with required API keys and settings:
+   - `GOOGLE_API_KEY` - Required for Google Search and Gemini models
+   - `GROQ_API_KEY` - Required for Groq LLM models
+   - `DEEP_SEEK_API_KEY` - Required for DeepSeek models
+   - `JINA_API_KEY` - Required when using Jina for crawling
+   - `SUPABASE_URL` and `SUPABASE_KEY` - Required for database functionality
+   - `LLM_TO_USE` - Choose your LLM provider: "GEMINI", "GROQ", "DEEPSEEK", or "OLLAMA"
+   - `LLM_MODEL` - Specify the model name for your chosen provider
 
 ### **4️⃣ Start the Application**
 
@@ -87,7 +94,7 @@ pipenv run start
 
 ### **5️⃣ (Optional) Use Crawl4AI**
 
-- Set `CRAWLER_PROVIDER=Crawl4AI` in `.env`.
+- Set `CRAWLER_PROVIDER=CRAWL4AI` in `.env`.
 - Generate a random secret and set it as `CRAWL4AI_API_TOKEN`.
 
 ---
@@ -166,7 +173,10 @@ This project is licensed under the **MIT License**.
 Big thanks to:
 
 - [**Jina AI**](https://jina.ai/reader/) for providing free API access.
-- [**Groq**](https://groq.com/) for LLaMA-3-based inference.
+- [**Google AI**](https://ai.google.dev/) for Gemini models and embeddings.
+- [**Groq**](https://groq.com/) for high-performance LLaMA model inference.
+- [**DeepSeek**](https://deepseek.ai/) for their powerful AI models.
+- [**Ollama**](https://ollama.ai/) for local model support.
 - [**Supabase**](https://supabase.io/) for database storage.
 - [**ChromaDB**](https://www.trychroma.com/) for the vector store.
 - [**Streamlit**](https://streamlit.io/) for the frontend framework.

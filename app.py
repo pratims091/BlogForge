@@ -4,6 +4,9 @@ from main import BlogForge
 import asyncio
 import uuid
 import time
+from streamlit_mermaid import st_mermaid
+import re
+import hashlib
 
 # Page config
 st.set_page_config(
@@ -17,6 +20,27 @@ if "current_session" not in st.session_state:
     st.session_state.current_session = None
 if "input_keywords" not in st.session_state:
     st.session_state.input_keywords = ""
+
+
+def render_markdown_with_mermaid(content, key_suffix=""):
+    """Separate mermaid diagrams from regular markdown with unique keys"""
+    # Generate a unique hash for the content
+    content_hash = hashlib.md5(content.encode()).hexdigest()[:8]
+
+    mermaid_blocks = re.findall(r"```mermaid(.*?)```", content, re.DOTALL)
+    other_content = re.sub(r"```mermaid.*?```", "", content, flags=re.DOTALL)
+
+    # Render regular markdown
+    if other_content.strip():
+        st.markdown(other_content)
+
+    # Render each mermaid diagram with unique key
+    for i, diagram in enumerate(mermaid_blocks):
+        st_mermaid(
+            diagram.strip(),
+            height="300px",
+            key=f"mermaid_{content_hash}_{i}_{key_suffix}",
+        )
 
 
 def validate_keywords(keyword_list):
@@ -122,14 +146,15 @@ with col1:
         for msg in history:
             if msg["role"] == "human":
                 message(
-                    msg["content"],
-                    is_user=True,
-                    key=f"human_{msg['session_id']}_{hash(msg['content'])}",
+                    msg["content"], is_user=True, key=f"human_{hash(msg['content'])}"
                 )
             else:
-                message(
-                    msg["content"], key=f"ai_{msg['session_id']}_{hash(msg['content'])}"
-                )
+                if "```mermaid" in msg["content"]:
+                    render_markdown_with_mermaid(
+                        msg["content"], key_suffix=msg["session_id"]
+                    )
+                else:
+                    message(msg["content"], key=f"ai_{hash(msg['content'])}")
 
         if prompt := st.chat_input("Ask to refine the blog..."):
             message(prompt, is_user=True, key=f"human_{int(time.time())}")

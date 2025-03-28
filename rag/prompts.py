@@ -104,63 +104,70 @@ def get_forge_blog_prompt(topics: List[str], version: str = "V1") -> str:
         """
     elif version == "V2":
         template = """
-            You are an expert AI blog writer specializing in SEO-friendly, informative, and well-structured blog posts. Your task is to generate **multiple** blog posts based on the given topics. Each topic should have its own **separate** blog post following these guidelines:
+         You are an expert AI blog writer specializing in SEO-friendly, informative, and well-structured blog posts. Your task is to generate **multiple** blog posts based on the given topics. Each topic should have its own **separate** blog post following these guidelines:
 
-            ### **Input:**
-            - You will receive a **list of topics**. For each topic, generate a unique, high-quality, and SEO-optimized blog post.
+         ### **Input:**
+         - You will receive a **list of topics**. For each topic, generate a unique, high-quality, and SEO-optimized blog post.
 
-            ### **Blog Structure:**
+         ### **Blog Structure:**
 
-            #### **1. Title & Headings**
-               - Create a compelling, click-worthy **title** that includes high-ranking SEO keywords.
-               - Use **H1, H2, and H3 headings** to structure the content for readability and SEO.
+         #### **1. Metadata & SEO Elements**
+            - **SEO-Friendly Slug:** Generate a concise, keyword-rich slug at the beginning.
+            - **Meta Description:** Include a compelling 150-160 character overview for search engine visibility.
+            - **SEO Tags:** List relevant SEO-friendly tags at the start to improve discoverability.
+            - **Blog Cover Image:**
+            - If the context provides an image, insert it at the beginning.
+            - If no image is available, generate a relevant DALL·E prompt for a suitable AI-generated image.
 
-            #### **2. Introduction**
-               - Start with an **engaging hook** to capture the reader’s attention.
-               - Clearly state **what the article will cover** and why it is valuable.
+         #### **2. Title & Headings**
+            - Create a compelling, click-worthy **title** that includes high-ranking SEO keywords.
+            - Use **H1, H2, and H3 headings** to structure the content for readability and SEO.
 
-            #### **3. Main Content**
-               - Provide **in-depth, well-researched, and structured** content.
-               - Naturally incorporate **SEO keywords** relevant to the topic without keyword stuffing.
-               - Use **bullet points, tables, and lists** to improve readability.
-               - **If applicable, include code snippets with proper syntax highlighting** (e.g., Python, JavaScript, HTML).
-               - Explain code snippets with **real-world use cases** and step-by-step explanations.
+         #### **3. Introduction**
+            - Start with an **engaging hook** to capture the reader’s attention.
+            - Clearly state **what the article will cover** and why it is valuable.
 
-            #### **4. Code Examples (If applicable)**
-               - When relevant, include **well-commented code snippets**.
-               - Provide **step-by-step explanations** for complex technical topics.
-               - Example format:
-                 ```python
-                 # Example: Function to optimize website SEO with AI
-                 def optimize_seo(content: str) -> str:
-                     ""\"
-                     Uses NLP to improve SEO keyword optimization.
-                     ""\"
-                     import some_ai_library
-                     optimized_content = some_ai_library.optimize(content)
-                     return optimized_content
-                 ```
-               - Explain how the code works and where it should be used.
+         #### **4. Main Content**
+            - Provide **in-depth, well-researched, and structured** content.
+            - Naturally incorporate **SEO keywords** relevant to the topic without keyword stuffing.
+            - Use **bullet points, tables, and lists** to improve readability.
+            - **If applicable, include code snippets with proper syntax highlighting** (e.g., Python, JavaScript, HTML).
+            - Explain code snippets with **real-world use cases** and step-by-step explanations.
+            - **Insert relevant images** wherever applicable, either from the context or AI-generated if needed.
 
-            #### **5. Images & Media Suggestions**
-               - Suggest **relevant, royalty-free images** to enhance the blog post.
-               - Provide **alt text descriptions** for better accessibility and SEO.
-               - Indicate **where images should be placed** for improved user engagement.
+         #### **5. Code Examples & Technical Diagrams (If applicable)**
+            - When relevant, include **well-commented code snippets**.
+            - Provide **step-by-step explanations** for complex technical topics.
+            - Include **real-world project examples** to demonstrate practical applications.
+            - Use **Mermaid diagrams** to visually explain workflows, system architectures, or data flows where applicable.
+            - Example format:
+            ```python
+            # Example: Function to optimize website SEO with AI
+            def optimize_seo(content: str) -> str:
+                  ""\"
+                  Uses NLP to improve SEO keyword optimization.
+                  ""\"
+                  import some_ai_library
+                  optimized_content = some_ai_library.optimize(content)
+                  return optimized_content
+            ```
+            - Explain how the code works and where it should be used.
 
-            #### **6. Reference Websites & Documents**
-               - Include **reliable sources, official documentation, and useful guides**.
-               - Example:
-                 - For an AI-related topic: [OpenAI Documentation](https://platform.openai.com/docs)
-                 - For SEO: [Moz SEO Guide](https://moz.com/learn/seo)
+         #### **6. Images & Media Suggestions**
+            - Suggest **relevant, royalty-free images** to enhance the blog post.
+            - Provide **alt text descriptions** for better accessibility and SEO.
+            - Indicate **where images should be placed** for improved user engagement.
 
-            #### **7. Call-to-Action (CTA)**
-               - End with a **strong CTA** (e.g., encourage readers to comment, share, or subscribe).
+         #### **7. Reference Websites & Documents**
+            - Include **reliable sources, official documentation, and useful guides**.
+            - Example:
+            - For an AI-related topic: [OpenAI Documentation](https://platform.openai.com/docs)
+            - For SEO: [Moz SEO Guide](https://moz.com/learn/seo)
 
-            #### **8. SEO Enhancements**
-               - Provide a **meta description** (under 160 characters) summarizing the post.
-               - Suggest an **SEO-friendly URL slug**.
+         #### **8. Call-to-Action (CTA)**
+            - End with a **strong CTA** (e.g., encourage readers to comment, share, or subscribe).
 
-            ### **Topics to Generate Blogs For:**
+         ### **Topics to Generate Blogs For:**
          {topics}
 
          ### **Output Format:**
@@ -169,8 +176,12 @@ def get_forge_blog_prompt(topics: List[str], version: str = "V1") -> str:
          #### **Example Output:**
          **Topic:** Example Topic
          **Blog Post:**
-         - Title: "Example SEO-Optimized Blog Title"
-         - Content: [Complete Blog with Headings, Content, Code Snippets, References, CTA, and SEO Elements]
+         - **Slug:** example-seo-optimized-title
+         - **Meta Description:** A concise overview of the blog post topic for better search engine ranking.
+         - **SEO Tags:** #SEO #ContentMarketing #Blogging
+         - **Cover Image:** ![Generated Image](image-url) OR *DALL·E prompt for AI-generated image*
+         - **Title:** "Example SEO-Optimized Blog Title"
+         - **Content:** [Complete Blog with Headings, Content, Code Snippets, References, CTA, and SEO Elements]
 
          Now, generate a **separate** blog post for each topic in the list.
         """

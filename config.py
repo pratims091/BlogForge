@@ -20,8 +20,12 @@ class Config:
     CRAWL4AI_API_TOKEN: str = os.getenv("CRAWL4AI_API_TOKEN", "")
     JINA_API_KEY: str = os.getenv("JINA_API_KEY", "")
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+    DEEP_SEEK_API_KEY: str = os.getenv("DEEP_SEEK_API_KEY", "")
 
-    MAX_SEARCH_RESULTS: int = int(os.getenv("MAX_SEARCH_RESULTS", 5))
+    # search settings
+    MAX_SEARCH_RESULTS: int = int(os.getenv("MAX_SEARCH_RESULTS", 10))
+    SEARCH_PROVIDER: str = os.getenv("SEARCH_PROVIDER", "GOOGLE")
+
     # Crawler settings
     CRAWLER_PROVIDER: str = os.getenv("CRAWLER_PROVIDER", "JINA")
     CRAWL4AI_HOST: str = os.getenv("CRAWL4AI_HOST", "http://crawl4ai:11235")
@@ -35,6 +39,7 @@ class Config:
     PERSIST_DIRECTORY: str = os.getenv("VECTOR_STORE_DIR", "data/chroma_db")
 
     # LLM settings
+    LLM_TO_USE: str = os.getenv("LLM_TO_USE")
     LLM_MODEL: str = os.getenv("LLM_MODEL")
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "models/embedding-001")
 

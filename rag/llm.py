@@ -7,6 +7,8 @@ from functools import lru_cache
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
+from langchain_ollama import ChatOllama
 
 from config import config
 from utils.logger import logger
@@ -25,25 +27,42 @@ def get_llm_model(streaming: bool = False) -> ChatGoogleGenerativeAI:
         ChatGoogleGenerativeAI: The LLM model
     """
     try:
-        # Use Gemini other preferred models
-        # llm_model = ChatGoogleGenerativeAI(
-        #     model=config.LLM_MODEL,
-        #     google_api_key=config.GOOGLE_API_KEY,
-        #     temperature=0.7,
-        #     top_p=0.95,
-        #     convert_system_message_to_human=True,
-        #     streaming=streaming,  # Enable/disable streaming
-        # )
-        llm_model = ChatGroq(
-            model=config.LLM_MODEL,
-            temperature=0,
-            api_key=config.GROQ_API_KEY,
-            disable_streaming=not streaming,  # Use the streaming parameter
-            verbose=True,
+        logger.info(
+            f"Created LLM model: {config.LLM_MODEL} with {config.LLM_TO_USE} (streaming={streaming})"
         )
 
-        logger.info(f"Created LLM model: {config.LLM_MODEL} (streaming={streaming})")
-        return llm_model
+        match config.LLM_TO_USE:
+            case "GEMINI":
+                return ChatGoogleGenerativeAI(
+                    model=config.LLM_MODEL,
+                    google_api_key=config.GOOGLE_API_KEY,
+                    temperature=0.7,
+                    top_p=0.95,
+                    convert_system_message_to_human=True,
+                    streaming=streaming,  # Enable/disable streaming
+                )
+            case "GROQ":
+                return ChatGroq(
+                    model=config.LLM_MODEL,
+                    temperature=0,
+                    api_key=config.GROQ_API_KEY,
+                    disable_streaming=not streaming,  # Use the streaming parameter
+                    verbose=True,
+                )
+            case "DEEPSEEK":
+                return ChatDeepSeek(
+                    model=config.LLM_MODEL,
+                    temperature=0,
+                    api_key=config.DEEP_SEEK_API_KEY,
+                    disable_streaming=not streaming,
+                    verbose=True,
+                )
+            case "OLLAMA":
+                return ChatOllama(
+                    model=config.LLM_MODEL, temperature=0, stream=streaming
+                )
+            case _:
+                raise ValueError(f"Unsupported LLM_TO_USE value: {config.LLM_TO_USE}")
     except Exception as e:
         logger.error(f"Failed to create LLM model: {e}")
         raise

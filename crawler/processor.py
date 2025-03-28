@@ -37,15 +37,17 @@ def process_crawl_results(results: List[Dict[str, Any]]) -> List[Document]:
                 continue
 
             # Create document with metadata
+            title = result.get("title", "")
+            metadata = {
+                "source": page_url,
+                "keyword": keyword,
+            }
+            if title:
+                metadata["title"] = title
             documents.append(
                 Document(
                     page_content=content,
-                    metadata={
-                        "source": page_url,
-                        "title": result.get("title", ""),
-                        "description": result.get("description", ""),
-                        "keyword": keyword,
-                    },
+                    metadata=metadata,
                 )
             )
 

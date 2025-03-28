@@ -21,6 +21,10 @@ transformers = "*"
 langchain-groq = "*"
 streamlit = "*"
 streamlit-chat = "*"
+duckduckgo-search = "*"
+streamlit-mermaid = "*"
+langchain-deepseek = "*"
+langchain-ollama = "*"
 
 [dev-packages]
 ruff = "*"

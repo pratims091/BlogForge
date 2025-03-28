@@ -3,19 +3,34 @@ from googlesearch import search
 from config import config
 from utils.logger import logger
 from db.supabase import db_client
+from duckduckgo_search import DDGS
 
 
 def perform_search(keyword: str, limit: int, advanced: bool) -> List[Any]:
-    return search(
-        keyword + " blog posts intitle:blog inurl:blog",
-        num_results=limit,
-        lang="en",
-        region="eu",
-        unique=True,
-        advanced=advanced,
-        sleep_interval=5,
-        ssl_verify=False,
-    )
+    results = []
+    if config.SEARCH_PROVIDER == "GOOGLE":
+        results = search(
+            keyword,
+            num_results=limit,
+            lang="en",
+            region="eu",
+            unique=True,
+            advanced=advanced,
+            sleep_interval=5,
+            ssl_verify=False,
+        )
+    elif config.SEARCH_PROVIDER == "DUCKDUCKGO":
+        search_results = DDGS().text(keywords=keyword, max_results=limit)
+
+        for sr in search_results:
+            if advanced:
+                results.append(
+                    {"title": sr["title"], "url": sr["href"], "description": sr["body"]}
+                )
+            else:
+                results.append(sr["href"])
+
+    return results
 
 
 def process_results(
@@ -60,7 +75,9 @@ async def search_for_blog_posts(
 
     for keyword in keywords:
         try:
-            results = perform_search(keyword, limit, advanced)
+            results = perform_search(
+                keyword + " blog posts intitle:blog inurl:blog", limit, advanced
+            )
             process_results(results, keyword, search_results, advanced)
             successful_keywords.append(keyword)
         except Exception as e:
@@ -71,6 +88,6 @@ async def search_for_blog_posts(
         update_search_results_with_ids(search_results, saved_keywords)
 
     logger.info(
-        f"Successfully searched Google for {len(successful_keywords)} out of {len(keywords)} keywords"
+        f"Successfully searched {config.SEARCH_PROVIDER} for {len(successful_keywords)} out of {len(keywords)} keywords"
     )
     return search_results

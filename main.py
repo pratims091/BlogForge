@@ -23,8 +23,15 @@ class BlogForge:
         self.db = db_client
 
     async def forge(self) -> Tuple[str, List[Dict[str, Any]]]:
-        search_results = await search_for_blog_posts(keywords=self.keywords, limit=7)
+        search_results = await search_for_blog_posts(keywords=self.keywords)
+
+        if not search_results:
+            return "No results found for the given keywords.", []
+
         crawl_results = await crawl_search_results(search_results)
+
+        if not crawl_results:
+            return "No content could be crawled from the search results.", []
 
         documents = process_crawl_results(results=crawl_results)
 

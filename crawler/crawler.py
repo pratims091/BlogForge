@@ -34,7 +34,7 @@ async def crawler_crawl4ai(
     for result in results:
         crawl_results.append(
             {
-                "url": result.url,
+                "url": result["url"],
                 "title": result.get("metadata", {}).get("title", ""),
                 "description": result.get("metadata", {}).get("description", ""),
                 "content": result.get("extracted_content")
